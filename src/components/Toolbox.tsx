@@ -10,6 +10,7 @@ import { Element, useEditor } from "@craftjs/core";
 import ImageDropzone from "./image/ImageDropzone";
 import { SHeadingRightPanel } from "./styled/SHeading";
 import Heading from "./common/Heading";
+import EditComponentSlider from "./common/EditComponentSlider";
 
 const SContainer = styled(SFlexCol)`
     
@@ -68,7 +69,7 @@ export const Toolbox = () => {
             <SHeadingRightPanel>Components</SHeadingRightPanel>
             <SFlexRowWrap>
                 {/* <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Button class={'md'} >Neue Button</Button>)}>Button</SToolboxButton>
-                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Text text={"Hi i'm text"} fontSize={20} />)}>Text</SToolboxButton>
+                
                
                 <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Card />)}>Card</SToolboxButton>
  */}
@@ -77,6 +78,11 @@ export const Toolbox = () => {
 
                 {/* Heading */}
                 <SToolboxButton  className={'lg'} ref={ref => connectors.create(ref, <Heading fontSize={"2rem"} align={"left"}  padding={"10px"} text={"This is a great heading"}/>)}>Heading</SToolboxButton>
+
+                {/* Text */}
+                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Text  />)}>Text</SToolboxButton>
+
+                
 
             </SFlexRowWrap>
         </SContainer>

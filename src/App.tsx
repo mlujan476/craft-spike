@@ -1,17 +1,16 @@
-import { useState } from 'react'
-import './App.css'
-import styled from 'styled-components'
-import { Editor, Frame, Element } from "@craftjs/core";
-import { Topbar } from './components/Topbar';
-import LeftPanel from './components/LeftPanel';
-import RightPanel from './components/RightPanel';
-import Container from './components/container/Container';
+import { Editor } from "@craftjs/core";
+import '@mantine/core/styles.css';
+import { useState } from 'react';
+import styled from 'styled-components';
+import './App.css';
 import EditorArea from './components/EditorArea';
-import { Text } from './components/Text';
-import { Button } from './components/Button';
-import ImageDropzone from './components/image/ImageDropzone';
-import ImageContainer, { SContainer } from './components/image/ImageContainer';
 import Heading from './components/common/Heading';
+import Container from './components/container/Container';
+import ImageContainer from './components/image/ImageContainer';
+import ImageDropzone from './components/image/ImageDropzone';
+import { Text } from "./components/Text";
+import { createTheme, MantineProvider } from '@mantine/core'
+import EditComponentSlider from "./components/common/EditComponentSlider";
 
 const SBody = styled.div`
   width: 100%;
@@ -29,18 +28,22 @@ const SBody = styled.div`
   background-color: #f5f5f5;
 `
 
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
+
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <SBody>
-      <Editor resolver={{ Container, ImageDropzone, ImageContainer, Heading }}>
-        <EditorArea />
-      </Editor>
-
-
-    </SBody>
+    <MantineProvider theme={theme}>
+      <SBody>
+        <Editor resolver={{ Container, ImageDropzone, ImageContainer, Heading, Text, EditComponentSlider }}>
+          <EditorArea />
+        </Editor>
+      </SBody>
+    </MantineProvider>
   )
 }
 
