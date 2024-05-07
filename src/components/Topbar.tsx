@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { SFlexRow } from "./container/FlexContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMobileAlt, faTabletAlt, faDesktopAlt } from "@fortawesome/free-solid-svg-icons";
+import { useEditor } from "@craftjs/core";
 
 const STopbar = styled(SFlexRow)`
     height: 80px;
@@ -50,6 +51,15 @@ const SIcon = styled(FontAwesomeIcon)`
 `
 
 export const Topbar = ({ setDeviceType }: any) => {
+
+    const { actions, query, enabled } = useEditor((state: any) => ({
+        enabled: state.options.enabled
+    }))
+
+    const handleExport = () => {
+        console.log("Export: " , query.serialize())
+    }
+
     return (
         <STopbar>
             <SButton onClick={() => setDeviceType("DESKTOP")}><SIcon icon={faDesktopAlt} /></SButton>
@@ -58,7 +68,7 @@ export const Topbar = ({ setDeviceType }: any) => {
 
             <SButton onClick={() => setDeviceType("MOBILE")}><SIcon icon={faMobileAlt} /></SButton>
             
-            <SButton className="wide right">Export</SButton>
+            <SButton className="wide right" onClick={handleExport}>Export</SButton>
 
         </STopbar>
     )

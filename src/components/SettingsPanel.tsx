@@ -11,6 +11,10 @@ const SSettingsPanel = styled(SFlexCol)`
     width: 100%;
 
     padding: 20px;
+    align-items: flex-start;
+    font-size: 1.2rem;
+    font-weight:200;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 `
 
 const SButton = styled.button`
@@ -49,11 +53,11 @@ const SButton = styled.button`
 
 export const SettingsPanel = () => {
 
-  const { actions, selected } =  useEditor((state, query) => {
+  const { actions, selected } = useEditor((state, query) => {
     const [currentNodeId] = state.events.selected
     let selected
 
-    if(currentNodeId){
+    if (currentNodeId) {
       selected = {
         id: currentNodeId,
         name: state.nodes[currentNodeId].data.name,
@@ -70,17 +74,18 @@ export const SettingsPanel = () => {
 
   return selected ? (
     <SSettingsPanel>
-      <SHeadingRightPanel>
+      <SHeadingRightPanel>Settings</SHeadingRightPanel> 
+
+
         {
           selected.settings && React.createElement(selected.settings)
         }
         {
           selected.isDeletable ? (
-            <SButton className={"wide"} onClick={() => {actions.delete(selected.id)}}>Delete</SButton>
-          ): null
+            <SButton className={"wide"} onClick={() => { actions.delete(selected.id) }}>Delete</SButton>
+          ) : null
         }
-        
-      </SHeadingRightPanel>
+
     </SSettingsPanel>
   ) : null
 }

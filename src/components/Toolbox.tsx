@@ -1,24 +1,21 @@
 // components/Toolbox.js
-import React from "react";
-import { SFlexCol, SFlexRow, SFlexRowWrap } from "./container/FlexContainer";
+import { useEditor } from "@craftjs/core";
 import styled from "styled-components";
-import { Button } from "./Button";
 import { Text } from "./Text";
-import { FlexContainer } from "./FlexContainer";
-import { Card } from "./Card";
-import { Element, useEditor } from "@craftjs/core";
+import Heading from "./common/Heading";
+import { SFlexCol, SFlexRowWrap } from "./container/FlexContainer";
 import ImageDropzone from "./image/ImageDropzone";
 import { SHeadingRightPanel } from "./styled/SHeading";
-import Heading from "./common/Heading";
-import EditComponentSlider from "./common/EditComponentSlider";
+import ListContainer from "./list/ListContainer";
+import TwoColumn from "./container/TwoColumn";
+import Row from "./container/Row";
+import Column from "./container/Column";
+import ListItem from "./list/ListItem";
 
 const SContainer = styled(SFlexCol)`
-    
     width: 100%;
-
     padding: 20px;
 `
-
 
 interface Props {
 
@@ -77,10 +74,26 @@ export const Toolbox = () => {
                 <SToolboxButton  className={'lg'} ref={ref => connectors.create(ref, <ImageDropzone />)}>Image</SToolboxButton>
 
                 {/* Heading */}
-                <SToolboxButton  className={'lg'} ref={ref => connectors.create(ref, <Heading fontSize={"2rem"} align={"left"}  padding={"10px"} text={"This is a great heading"}/>)}>Heading</SToolboxButton>
+                <SToolboxButton  className={'lg'} ref={ref => connectors.create(ref, <Heading />)}>Heading</SToolboxButton>
 
                 {/* Text */}
-                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Text  />)}>Text</SToolboxButton>
+                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Text/>)}>Text</SToolboxButton>
+
+
+                {/* Single Column */}
+                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Column/>)}>Single Column</SToolboxButton>
+
+                {/* Two Column */}
+                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <TwoColumn/>)}>Two Column</SToolboxButton>
+
+                {/* Two Column */}
+                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <Row/>)}>Row</SToolboxButton>
+
+                {/* List Container */}
+                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <ListContainer/>)}>List Container</SToolboxButton>
+
+                {/* List Container */}
+                <SToolboxButton className={'lg'} ref={ref => connectors.create(ref, <ListItem/>)}>List Item</SToolboxButton>
 
                 
 

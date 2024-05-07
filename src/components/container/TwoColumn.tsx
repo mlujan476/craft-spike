@@ -1,15 +1,16 @@
-import { useNode } from '@craftjs/core'
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { NumberInput, Select, ComboboxItem } from '@mantine/core';
-import { SFlexCol, SFlexRow } from '../container/FlexContainer';
+import { Element, Frame, useNode } from "@craftjs/core";
+import styled from 'styled-components';
+import Column from './Column';
+import { SFlexCol, SFlexRow } from "./FlexContainer";
+import { useState } from "react";
+import { ComboboxItem, NumberInput, Select } from "@mantine/core";
 
-interface IHeadingProps {
-    fontSize: string
-    fontWeight: number
-    color: string
+interface IContainerProps {
+    height: string
+    width: string
+
     textAlign: string
-    
+
     marginTop: number
     marginRight: number
     marginBottom: number
@@ -21,11 +22,17 @@ interface IHeadingProps {
     paddingLeft: number
 }
 
-const SHeading = styled.h1<IHeadingProps>`
-    font-size: ${p => p.fontSize + "px"};
-    font-weight: ${p => p.fontWeight};
-    color: ${p => p.color};
-    text-align: ${p => p.textAlign};
+const SContainer = styled.div<IContainerProps>`
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-areas: "left right";
+    box-sizing: border-box;
+    min-height: 100px;
+
+    border: 2px dotted #7bedc5;
+
+    width: ${p => p.width === "max" ? "100%" : p.width+"px"};
+    height: auto;
 
     margin-top: ${p => p.marginTop + "px"};
     margin-right: ${p => p.marginRight + "px"};
@@ -37,12 +44,10 @@ const SHeading = styled.h1<IHeadingProps>`
     padding-bottom: ${p => p.paddingBottom + "px"};
     padding-left: ${p => p.paddingLeft + "px"};
 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 3px dotted #f1f1f1;
-    width: auto;
+    
 `
 
-const SContainer = styled(SFlexCol)`
+const SSettingsContainer = styled(SFlexCol)`
     
 `
 
@@ -54,37 +59,19 @@ const SRowContainer = styled(SFlexRow)`
     align-items: flex-start;
 `
 
-const Heading = ({ fontSize, fontWeight,  fontColor, headingText, textAlign, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft }: any) => {
 
+const TwoColumn = ({ height, width, textAlign, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft }: any) => {
     const { connectors: { connect, drag } } = useNode((node: any) => ({
         isActive: node.events.selected
     }))
 
-    //const [text, setText] = useState<string>(headingText)
-    const [editable, setEditable] = useState<boolean>(false)
-
-    //const handleEdit = (e: any) => setText(e.target.value)
-
-    /* useEffect(() => {
-        if (!hasSelectedNode) {
-            setEditable(false)
-
-        }
-    }, []) */
-
     return (
-
-        <SHeading
-           
-            contentEditable={editable}
-            onChange={e => props.headingText = e.target.value.replace(/<\/?[^>]+(>|$)/, "")}
-            onClick={() => setEditable(true)}
+        <SContainer
             ref={ref => connect(drag(ref))}
+            height={height}
+            width={width}
 
-            fontSize={fontSize}
-            fontWeight={fontWeight}
             textAlign={textAlign}
-            color={fontColor}
 
             marginTop={marginTop}
             marginRight={marginRight}
@@ -95,15 +82,23 @@ const Heading = ({ fontSize, fontWeight,  fontColor, headingText, textAlign, mar
             paddingRight={paddingRight}
             paddingBottom={paddingBottom}
             paddingLeft={paddingLeft}
-
-        >{headingText}</SHeading>
+        >
+            <Element id="left" is={Column} gridArea={"left"} canvas />
+            <Element id="right" is={Column} gridArea={"right"} canvas/>
+        </SContainer>
     )
 }
 
-const HeadingSettings = () => {
-    const { actions: { setProp }, fontSize, textAlign, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft } = useNode((node) => ({
+
+const TwoColumnSettings = () => {
+    const { actions: { setProp }, height, width, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft } = useNode((node) => ({
+
+        width: node.data.props.width,
+        height: node.data.props.height,
+
         fontSize: node.data.props.fontSize,
         textAlign: node.data.props.textAlign,
+        fontColor: node.data.props.color,
 
         marginTop: node.data.props.marginTop,
         marginRight: node.data.props.marginRight,
@@ -116,16 +111,13 @@ const HeadingSettings = () => {
         paddingLeft: node.data.props.paddingLeft,
     }))
 
-    const [value, setValue] = useState<ComboboxItem | null>(null);
 
-    const editFontSize = (value: any) => {
-        setProp((props: any) => props.fontSize = value)
+    const editWidth = (value: number) => {
+        setProp((props: any) => props.width = value)
     }
 
-    const editTextAlign = (value: any, option: any) => {
-        setProp((props: any) => props.textAlign = value)
-        setValue(option)
-
+    const editHeight = (value: number) => {
+        setProp((props: any) => props.height = value)
     }
 
 
@@ -155,34 +147,38 @@ const HeadingSettings = () => {
     const editPaddingLeft = (value: number) => {
         setProp((props: any) => props.paddingLeft = value)
     }
-
-
     return (
-        <SContainer>
+        <SSettingsContainer>
+
+
             <SRowContainer>
 
                 <NumberInput
-                    label="Font Size"
+                    label="Height"
                     style={{ textAlign: "left" }}
                     suffix="px"
-                    defaultValue={fontSize}
-                    min={8}
-                    max={80}
-                    value={fontSize}
-                    onChange={(value: any) => editFontSize(value)}
+                    defaultValue={height}
+                    min={20}
+                    max={2000}
+                    value={height}
+                    onChange={(value: any) => editHeight(value)}
 
                 />
 
-                <Select
-                    label="Text Align"
+                <NumberInput
+                    label="Width"
                     style={{ textAlign: "left" }}
-                    data={["left", "center", "right"]}
-                    value={textAlign}
-                    onChange={(value: any, option: any) => editTextAlign(value, option)}
+                    suffix="px"
+                    defaultValue={width}
+                    min={20}
+                    max={2000}
+                    value={width}
+                    onChange={(value: any) => editWidth(value)}
+
                 />
             </SRowContainer>
 
-            
+
 
             <SRowContainer>
 
@@ -295,15 +291,15 @@ const HeadingSettings = () => {
             </SRowContainer>
 
 
-        </SContainer>
+        </SSettingsContainer>
     )
+
 }
 
-Heading.craft = {
+TwoColumn.craft = {
     props: {
-        headingText: "Edit Heading",
-        fontSize:40,
-        fontWeight: 300,
+        height: "100",
+        width: "max",
         textAlign: "left",
 
         marginTop: 0,
@@ -311,19 +307,21 @@ Heading.craft = {
         marginBottom: 0,
         marginLeft: 0,
 
-        paddingTop: 0,
-        paddingRight: 0,
-        paddingBottom: 0,
-        paddingLeft: 0,
-        
-        
+        paddingTop: 20,
+        paddingRight: 20,
+        paddingBottom: 20,
+        paddingLeft: 20,
+
+
     },
     rules: {
-        canDrag: (node: any) => node.data.props.text != "Drag"
+        canDrag: (node: any) => node.data.props.text != "Drag",
+        //canMoveIn: (incomingNodes: any) => incomingNodes.every((incomingNode: any) => incomingNode)
     },
     related: {
-        settings: HeadingSettings
+        settings: TwoColumnSettings
     }
 }
 
-export default Heading
+
+export default TwoColumn

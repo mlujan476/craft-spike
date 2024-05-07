@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components'
-import { Toolbox } from '../components/Toolbox';
-import { SettingsPanel } from '../components/SettingsPanel';
-import { Topbar } from '../components/Topbar';
-import { FlexContainer } from '../components/FlexContainer';
-import { Button } from '../components/Button';
-import { Card, CardBottom, CardTop } from '../components/Card';
-import { Text } from '../components/Text';
-import { SFlexCol, SReset } from '../components/container/FlexContainer';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import LeftPanel from '../components/LeftPanel';
+import { Topbar } from '../components/Topbar';
+import { SFlexCol } from '../components/container/FlexContainer';
 
 
-import { Editor, Frame, Element, useNode } from "@craftjs/core";
-import Container from './container/Container';
-import ImageDropzone from './image/ImageDropzone';
+import { Element, Frame } from "@craftjs/core";
 import RightPanel from './RightPanel';
+import Container from './container/Container';
 
 interface IProps {
   width: string

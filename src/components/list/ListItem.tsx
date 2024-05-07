@@ -1,15 +1,20 @@
-import { useNode } from '@craftjs/core'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { List } from '@mantine/core'
 import styled from 'styled-components'
+import { useNode } from '@craftjs/core'
 import { NumberInput, Select, ComboboxItem } from '@mantine/core';
 import { SFlexCol, SFlexRow } from '../container/FlexContainer';
 
-interface IHeadingProps {
+interface IListItem {
+
+    height: number
+    width: number
+
     fontSize: string
     fontWeight: number
     color: string
     textAlign: string
-    
+
     marginTop: number
     marginRight: number
     marginBottom: number
@@ -21,11 +26,15 @@ interface IHeadingProps {
     paddingLeft: number
 }
 
-const SHeading = styled.h1<IHeadingProps>`
+const SListItem = styled(List.Item) <IListItem>`
+
     font-size: ${p => p.fontSize + "px"};
     font-weight: ${p => p.fontWeight};
     color: ${p => p.color};
     text-align: ${p => p.textAlign};
+
+    height: ${p=> p.height};
+    width: ${p => p.width};
 
     margin-top: ${p => p.marginTop + "px"};
     margin-right: ${p => p.marginRight + "px"};
@@ -39,8 +48,10 @@ const SHeading = styled.h1<IHeadingProps>`
 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border: 3px dotted #f1f1f1;
-    width: auto;
+
+    
 `
+
 
 const SContainer = styled(SFlexCol)`
     
@@ -54,37 +65,29 @@ const SRowContainer = styled(SFlexRow)`
     align-items: flex-start;
 `
 
-const Heading = ({ fontSize, fontWeight,  fontColor, headingText, textAlign, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft }: any) => {
+
+const ListItem = ({ fontSize, fontWeight, fontColor, textAlign, width, height, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft, text }: any) => {
 
     const { connectors: { connect, drag } } = useNode((node: any) => ({
         isActive: node.events.selected
     }))
 
-    //const [text, setText] = useState<string>(headingText)
     const [editable, setEditable] = useState<boolean>(false)
 
-    //const handleEdit = (e: any) => setText(e.target.value)
-
-    /* useEffect(() => {
-        if (!hasSelectedNode) {
-            setEditable(false)
-
-        }
-    }, []) */
-
     return (
-
-        <SHeading
-           
-            contentEditable={editable}
+        <SListItem
             onChange={e => props.headingText = e.target.value.replace(/<\/?[^>]+(>|$)/, "")}
             onClick={() => setEditable(true)}
             ref={ref => connect(drag(ref))}
+            contentEditable={editable}
 
             fontSize={fontSize}
             fontWeight={fontWeight}
             textAlign={textAlign}
             color={fontColor}
+
+            height={height}
+            width={width}
 
             marginTop={marginTop}
             marginRight={marginRight}
@@ -95,15 +98,19 @@ const Heading = ({ fontSize, fontWeight,  fontColor, headingText, textAlign, mar
             paddingRight={paddingRight}
             paddingBottom={paddingBottom}
             paddingLeft={paddingLeft}
-
-        >{headingText}</SHeading>
+        >{text}</SListItem>
     )
 }
 
-const HeadingSettings = () => {
-    const { actions: { setProp }, fontSize, textAlign, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft } = useNode((node) => ({
+const ListContainerSettings = () => {
+    const { actions: { setProp },  width, height, fontSize, textAlign, fontColor, marginTop, marginRight, marginBottom, marginLeft, paddingTop, paddingRight, paddingBottom, paddingLeft } = useNode((node) => ({
+
+        width: node.data.props.width,
+        height: node.data.props.height,
+
         fontSize: node.data.props.fontSize,
         textAlign: node.data.props.textAlign,
+        fontColor: node.data.props.color,
 
         marginTop: node.data.props.marginTop,
         marginRight: node.data.props.marginRight,
@@ -117,6 +124,7 @@ const HeadingSettings = () => {
     }))
 
     const [value, setValue] = useState<ComboboxItem | null>(null);
+    const [sizeValue, setSizeValue] = useState<ComboboxItem | null>(null)
 
     const editFontSize = (value: any) => {
         setProp((props: any) => props.fontSize = value)
@@ -128,6 +136,13 @@ const HeadingSettings = () => {
 
     }
 
+    const editWidth = (value: number) => {
+        setProp((props: any) => props.width = value)
+    }
+
+    const editHeight = (value: number) => {
+        setProp((props: any) => props.height = value)
+    }
 
     const editMarginTop = (value: number) => {
         setProp((props: any) => props.marginTop = value)
@@ -155,11 +170,18 @@ const HeadingSettings = () => {
     const editPaddingLeft = (value: number) => {
         setProp((props: any) => props.paddingLeft = value)
     }
-
-
     return (
         <SContainer>
+
             <SRowContainer>
+
+                <Select
+                    label="Text Align"
+                    style={{ textAlign: "left" }}
+                    data={["left", "center", "right"]}
+                    value={textAlign}
+                    onChange={(value: any, option: any) => editTextAlign(value, option)}
+                />
 
                 <NumberInput
                     label="Font Size"
@@ -173,16 +195,37 @@ const HeadingSettings = () => {
 
                 />
 
-                <Select
-                    label="Text Align"
+
+            </SRowContainer>
+
+            <SRowContainer>
+
+                <NumberInput
+                    label="Height"
                     style={{ textAlign: "left" }}
-                    data={["left", "center", "right"]}
-                    value={textAlign}
-                    onChange={(value: any, option: any) => editTextAlign(value, option)}
+                    suffix="px"
+                    defaultValue={height}
+                    min={20}
+                    max={1000}
+                    value={height}
+                    onChange={(value: any) => editHeight(value)}
+
+                />
+
+                <NumberInput
+                    label="Width"
+                    style={{ textAlign: "left" }}
+                    suffix="px"
+                    defaultValue={width}
+                    min={20}
+                    max={1000}
+                    value={width}
+                    onChange={(value: any) => editWidth(value)}
+
                 />
             </SRowContainer>
 
-            
+
 
             <SRowContainer>
 
@@ -297,14 +340,18 @@ const HeadingSettings = () => {
 
         </SContainer>
     )
+
 }
 
-Heading.craft = {
+ListItem.craft = {
     props: {
-        headingText: "Edit Heading",
-        fontSize:40,
-        fontWeight: 300,
+
+
+        fontColor: "black",
         textAlign: "left",
+
+        height: 50,
+        width: 200,
 
         marginTop: 0,
         marginRight: 0,
@@ -315,15 +362,16 @@ Heading.craft = {
         paddingRight: 0,
         paddingBottom: 0,
         paddingLeft: 0,
-        
-        
+
+
     },
     rules: {
         canDrag: (node: any) => node.data.props.text != "Drag"
     },
     related: {
-        settings: HeadingSettings
+        settings: ListContainerSettings
     }
 }
 
-export default Heading
+
+export default ListItem

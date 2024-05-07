@@ -11,6 +11,13 @@ import ImageDropzone from './components/image/ImageDropzone';
 import { Text } from "./components/Text";
 import { createTheme, MantineProvider } from '@mantine/core'
 import EditComponentSlider from "./components/common/EditComponentSlider";
+import ListContainer, { ListComponent } from "./components/list/ListContainer";
+import ListItem from "./components/list/ListItem";
+import TwoColumn from "./components/container/TwoColumn";
+import Column from "./components/container/Column";
+import Row, { RowDroppableArea } from "./components/container/Row";
+import ListContainerDropzone from "./components/list/ListContainer";
+import ImageDisplay from "./components/image/ImageDisplay";
 
 const SBody = styled.div`
   width: 100%;
@@ -39,7 +46,7 @@ function App() {
   return (
     <MantineProvider theme={theme}>
       <SBody>
-        <Editor resolver={{ Container, ImageDropzone, ImageContainer, Heading, Text, EditComponentSlider }}>
+        <Editor resolver={{ Container, ImageDisplay, ImageDropzone, ImageContainer, Heading, Text, EditComponentSlider, ListContainer, ListComponent, ListItem, TwoColumn, Column, Row, RowDroppableArea }}>
           <EditorArea />
         </Editor>
       </SBody>
